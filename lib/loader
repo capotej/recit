@@ -1,0 +1,12 @@
+#!/usr/bin/env bash
+
+function load_recit {
+    local recfile_location
+    if [[ -f "$HOME/.recit.location" ]]; then
+        recfile_location=$(cat "$HOME/.recit.location") 
+    else
+        echo "$HOME/.recit.location not found"
+        exit 1
+    fi
+    echo "$recfile_location"
+}

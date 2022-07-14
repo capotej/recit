@@ -1,0 +1,8 @@
+#!/usr/bin/env bash
+
+source lib/loader
+
+recfile=$(load_recit)
+
+recsel -t Project ${recfile}
+

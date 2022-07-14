@@ -1,0 +1,9 @@
+#!/usr/bin/env bash
+# Usage: recit add-project "notes"
+
+# shellcheck source=/dev/null
+source lib/loader
+
+recfile=$(load_recit)
+
+recins --verbose -f Id -v "$1" -t Project "${recfile}"

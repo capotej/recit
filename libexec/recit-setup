@@ -1,0 +1,12 @@
+#!/usr/bin/env bash
+
+source lib/recfile_template
+
+if [[ -f "$HOME/.recit.location" ]]; then
+    recfile_location=$(cat "$HOME/.recit.location") 
+    echo "looks like you already have recit set up at ${recfile_location}, aborting..."
+    exit 1
+fi
+
+recfile_template > "$HOME/.recit.db"
+echo "$HOME/.recit.db" > "$HOME/.recit.location"

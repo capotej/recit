@@ -1,0 +1,13 @@
+#!/usr/bin/env bash
+# Usage: recit today
+
+set -e
+
+# shellcheck source=/dev/null
+source lib/loader
+
+recfile=$(load_recit)
+
+fmt_date=$(date '+%Y-%m-%d')
+
+recsel -e "(Time >> '$fmt_date 00:00:00' && Time << '$fmt_date 23:59:59') || Time == '$fmt_date'" -t Entry "${recfile}"

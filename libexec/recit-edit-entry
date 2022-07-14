@@ -1,0 +1,32 @@
+#!/usr/bin/env bash
+# Usage: recit edit-entry uuid
+
+set -e
+
+# shellcheck source=/dev/null
+source lib/loader
+
+recfile=$(load_recit)
+
+uuid=$1
+
+notes=$(recsel -e "Id = '$uuid'" -t Entry -P Notes "${recfile}")
+time=$(recsel -e "Id = '$uuid'" -t Entry -P Time "${recfile}")
+
+if [[ -z $notes ]]; then
+  echo "record not found"
+  exit 1
+fi
+
+if [[ -z ${EDITOR+x} ]]; then
+  echo "$EDITOR is not defined please pass a message"
+  exit 1
+fi
+
+tmpfile="$(mktemp)"
+echo "$notes" > $tmpfile
+command $EDITOR "$tmpfile"
+notes=$(cat "$tmpfile")
+rm "$tmpfile"
+
+recins -e "Id = '$uuid'" -t Entry -f Id -v "$uuid" -f Notes -v "$notes" -f Time -v "$time" "${recfile}"

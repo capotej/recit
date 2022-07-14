@@ -1,0 +1,11 @@
+#!/usr/bin/env bash
+# Usage: recit yesterday
+
+# shellcheck source=/dev/null
+source lib/loader
+
+recfile=$(load_recit)
+
+fmt_date=$(perl -e "use POSIX qw(strftime); print strftime('%Y-%m-%d', localtime(time - 86400)), qq(\n);")
+
+recsel -e "(Time >> '$fmt_date 00:00:00' && Time << '$fmt_date 23:59:59') || Time == '$fmt_date'" -t Entry "${recfile}"

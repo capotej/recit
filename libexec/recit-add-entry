@@ -1,0 +1,46 @@
+#!/usr/bin/env bash
+# Usage: recit add-entry [time|"now"] "notes" (on 2nd argument opens $EDITOR) 
+
+set -e
+
+# shellcheck source=/dev/null
+source lib/loader
+
+recfile=$(load_recit)
+
+uuid=$(uuidgen)
+
+notes=""
+query_time=""
+
+if [[ -z "$1" ]]; then
+  query_time="now"
+else
+  query_time="$1"
+fi
+
+if [[ -z "$2" ]]; then
+  
+  if [[ -z ${EDITOR+x} ]]; then
+    echo "$EDITOR is not defined please pass a message"
+    exit 1
+  fi
+
+  tmpfile="$(mktemp)"
+  command $EDITOR "$tmpfile"
+  notes=$(cat "$tmpfile")
+  rm "$tmpfile"
+else
+  notes=$2
+fi
+
+if [[ "$query_time" == "now" || "$query_time" == "today" ]]; then
+  fmt_date=$(date '+%Y-%m-%d %r')
+elif [[ "$query_time" == "tomorrow" ]]; then
+  fmt_date=$(perl -e "use POSIX qw(strftime); print strftime('%Y-%m-%d', localtime(time + 86400)), qq(\n);")
+else
+  fmt_date=$query_time
+fi
+
+recins --verbose -f Id -v "$uuid" -f Time -v "$fmt_date" -f Notes -v "$notes" -t Entry "${recfile}"
+echo "$uuid"

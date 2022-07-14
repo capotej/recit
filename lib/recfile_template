@@ -1,0 +1,19 @@
+#!/usr/bin/env bash
+
+function recfile_template {
+  echo "# recit schema version v0.0.1
+%rec: Project
+%key: Id
+
+Id: example-project
+Status: open
+Notes: blah blah
+
+%rec: Entry
+%key: Id
+%type: Time date
+%auto: Time
+%type: ProjectRef rec Project
+%sort: Time
+  "
+}
